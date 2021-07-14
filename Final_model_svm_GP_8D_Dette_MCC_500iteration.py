@@ -345,7 +345,7 @@ def plot_progress_plot(num_iter_list, X_initial, score_multi_list, score_random_
 
     plt.title(title)
     plt.xlabel('Samples')
-    plt.ylabel('SVM accuracy')
+    plt.ylabel('SVM accuracy (MCC)')
     plt.legend()
     plt.show()
     return extended_num_iter_list
@@ -385,14 +385,14 @@ y_initial = y.copy()
 Full loop start if initial data has all classifications (-1 and 1)
 '''
 
-max_itr = 500                # number of additional samples
-C1 = 1e1                   # weight on the uncertainty
-report_frq = 5
+max_itr = 600                # number of additional samples
+C1 = 1e2                   # weight on the uncertainty
+report_frq = 10
 
 # Initial parameter setting
 svm_classifier = svm.SVC(kernel='rbf', C = 10000, random_state = 42) # initial svm
 initial_svm_classifier = deepcopy(svm_classifier) # copy initial svm for comparison
-n_optimization = 10 # number of initialization for optimization
+n_optimization = 5 # number of initialization for optimization
 new_points = np.array([]) # initialize new points collection
 # Variable bound
 bounds = []
@@ -401,7 +401,7 @@ for i in range(dim):
 
 # Loop start
 score_multi_list = []
-for inner_itr in range(5):
+for inner_itr in range(3):
     y = y_initial.copy()
     score_list, num_iter_list, X_final = mainloop(svm_classifier = svm_classifier,
             num_iter = max_itr, bounds = bounds, n_optimization = n_optimization, X = X, y=y, report_frq = report_frq)
@@ -415,8 +415,8 @@ score_random_list = LHS_LHS_sample_SVM(max_itr = max_itr, step_size = report_frq
 score_trueran_list = LHS_Random_sample_SVM(max_itr = max_itr, step_size= report_frq, iteration = 5)
 
 #%%
-title = 'Branin 2D with C1=' + str(C1) + ' and GP using SVM length scale and F1 score'
-extended_num_iter_list = plot_progress_plot(num_iter_list= num_iter_list, X_initial = X_initial, score_multi_list=score_multi_list,
+title = 'Dette 8D with C1=' + str(C1) + ' and GP using SVM length scale and MCC score'
+extended_num_itr_list = plot_progress_plot(num_iter_list= num_iter_list, X_initial = X_initial, score_multi_list=score_multi_list,
                     score_random_list = score_random_list, score_trueran_list= score_trueran_list,
                     title = title)
 
@@ -424,10 +424,10 @@ extended_num_iter_list = plot_progress_plot(num_iter_list= num_iter_list, X_init
 np.save("MCC_score_final_result_opt_500_Dette8d_C1_10_GP_opt.npy", np.array(score_multi_list))
 np.save("MCC_score_final_result_lhs_500_Dette8d_C1_10_GP_opt.npy", np.array(score_random_list))
 np.save("MCC_score_final_result_ran_500_Dette8d_C1_10_GP_opt.npy", np.array(score_trueran_list))
-np.save("MCC_score_extended_num_iter_list_500_Dette8d_C1_10_GP_opt.npy", np.array(extended_num_iter_list))
+np.save("MCC_score_extended_num_iter_list_500_Dette8d_C1_10_GP_opt.npy", np.array(extended_num_itr_list))
 
 #%%
-threshold_accuracy = np.arange(0.0, 0.55, 0.01)
+threshold_accuracy = np.arange(0.1, 0.9, 0.01)
 mean_score_opt = np.mean(score_multi_list, axis=0)
 mean_score_lhs = np.mean(score_random_list, axis=1)
 mean_score_rand = np.mean(score_trueran_list, axis=1)
@@ -437,25 +437,39 @@ sample_lhs = []
 sample_rand = []
 
 for thr in threshold_accuracy:
+    label1 = False
+    label2 = False
+    label3 = False
+
     for _num, _opt in zip(extended_num_itr_list, mean_score_opt):
         if _opt > thr:
             sample_opt.append(_num)
+            label1 = True
             break
+
     for _num, _lhs in zip(extended_num_itr_list, mean_score_lhs):
         if _lhs > thr:
             sample_lhs.append(_num)
+            label2 = True
             break
+
     for _num, _rand in zip(extended_num_itr_list, mean_score_rand):
         if _rand > thr:
             sample_rand.append(_num)
+            label3 = True
             break
 
-plt.figure()        
-plt.plot(threshold_accuracy, sample_opt, color = 'g', label = 'Optimization')
-plt.plot(threshold_accuracy, sample_lhs, color = 'r', label = 'LHS')
-plt.plot(threshold_accuracy, sample_rand, color = 'b', label = 'Random')
+    if (not label1 or not label2 or not label3):
+        break
 
-plt.title('Number of samples for desired accuracy')
+minimum_plot_size = min(len(sample_opt), len(sample_lhs), len(sample_rand))
+
+plt.figure()        
+plt.plot(threshold_accuracy[:minimum_plot_size], sample_opt[:minimum_plot_size], 'g-', label = 'Optimization')
+plt.plot(threshold_accuracy[:minimum_plot_size], sample_lhs[:minimum_plot_size], 'r--', label = 'LHS', alpha = 0.4)
+plt.plot(threshold_accuracy[:minimum_plot_size], sample_rand[:minimum_plot_size], 'b--', label = 'Random', alpha = 0.4)
+
+plt.title('Number of samples for desired MCC score')
 plt.xlabel('Desired accuracy')
 plt.ylabel('Number of samples needed')
 plt.legend()

@@ -1,0 +1,46 @@
+Iteration 0 : Added point x value is [0. 0.] and function value is -1.52E+02
+
+Current score is 0.4077669902912621 
+
+Iteration 1 : Added point x value is [0.379 1.   ] and function value is -1.48E+02
+
+Iteration 2 : Added point x value is [1.    0.402] and function value is -1.32E+02
+
+Iteration 3 : Added point x value is [0. 1.] and function value is -1.03E+02
+
+Iteration 4 : Added point x value is [1. 1.] and function value is -9.32E+01
+
+Iteration 5 : Added point x value is [0.359 0.   ] and function value is -8.12E+01
+
+Iteration 6 : Added point x value is [1. 0.] and function value is -7.46E+01
+
+Iteration 7 : Added point x value is [0.    0.315] and function value is -6.26E+01
+
+Iteration 8 : Added point x value is [0.706 1.   ] and function value is -4.45E+01
+
+Iteration 9 : Added point x value is [0.559 0.637] and function value is -4.00E+01
+
+Current score is 0.27702702702702703 
+
+Iteration 10 : Added point x value is [0.784 0.44 ] and function value is -2.60E+01
+
+Iteration 11 : Added point x value is [1.    0.663] and function value is -2.38E+01
+
+Iteration 12 : Added point x value is [0.19  0.152] and function value is -2.07E+01
+
+Iteration 13 : Added point x value is [0.25  0.808] and function value is -1.73E+01
+
+Iteration 14 : Added point x value is [0.607 0.   ] and function value is -1.32E+01
+
+Iteration 15 : Added point x value is [0.532 0.87 ] and function value is -8.70E+00
+
+Iteration 16 : Added point x value is [1.    0.169] and function value is -9.23E+00
+
+Iteration 17 : Added point x value is [0.515 0.106] and function value is -6.77E+00
+
+Iteration 18 : Added point x value is [0.151 1.   ] and function value is -7.46E+00
+
+Iteration 19 : Added point x value is [0.    0.842] and function value is -6.69E+00
+
+Current score is 0.34554973821989526 
+
